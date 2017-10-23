@@ -103,6 +103,51 @@ def create_illumina_metadata_overlay(dataset):
     )
 
 
+def find_paired_read(dataset, identifier):
+
+    illumina_metadata = dataset.get_overlay('illumina_metadata')
+
+    specific_metadata = illumina_metadata[identifier]
+
+    del specific_metadata['read']
+
+    matched_identifiers = []
+
+    # Find all items in the dataset where the illumina metadata matches except
+    # for the read tag
+    for candidate_id in dataset.identifiers:
+        candidate_metadata = illumina_metadata[candidate_id]
+        if candidate_metadata is not None:
+            if all(
+                (candidate_metadata[k] == v)
+                for k, v, in specific_metadata.items()
+            ):
+                matched_identifiers.append(candidate_id)
+
+    # This should be exactly two items
+    assert len(matched_identifiers) == 2
+
+    matched_identifiers.remove(identifier)
+
+    return matched_identifiers[0]
+
+
+def create_read1_overlay(dataset):
+    """Create an overlay that is True where the read is read 1 of a pair."""
+
+    illumina_metadata = dataset.get_overlay('illumina_metadata')
+
+    def is_read1(identifier):
+        try:
+            return illumina_metadata[identifier]['read'] == 1
+        except TypeError:
+            return False
+
+    read1_overlay = {i: is_read1(i) for i in dataset.identifiers}
+
+    dataset.put_overlay('is_read1', read1_overlay)
+
+
 @click.command()
 @dataset_uri_argument
 def cli(dataset_uri):
@@ -110,7 +155,7 @@ def cli(dataset_uri):
     dataset = DataSet.from_uri(dataset_uri)
 
     create_illumina_metadata_overlay(dataset)
-
+    create_read1_overlay(dataset)
 
 if __name__ == '__main__':
     cli()
