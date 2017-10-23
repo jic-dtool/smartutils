@@ -89,9 +89,10 @@ def create_illumina_metadata_overlay(dataset):
     illumina_metadata_overlay = {} # dataset.empty_overlay()
 
     for identifier in dataset.identifiers:
-        abspath = dataset.item_content_abspath(identifier)
+        relpath = dataset.item_properties(identifier)['relpath']
 
-        if is_file_extension_in_list(abspath, ['fq', 'fq.gz']):
+        if is_file_extension_in_list(relpath, ['fq', 'fq.gz']):
+            abspath = dataset.item_content_abspath(identifier)
             metadata = extract_metadata_from_fastq_file(abspath)
             illumina_metadata_overlay[identifier] = metadata
         else:
