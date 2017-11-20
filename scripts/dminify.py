@@ -101,7 +101,10 @@ def dminify(dataset_uri, dest_location_uri, n):
 
     for identifier in parent_dataset.identifiers:
         entry = parent_dataset.item_properties(identifier)
-        if is_file_extension_in_list(entry['relpath'], ['.fq', '.fq.gz']):
+        if is_file_extension_in_list(
+            entry['relpath'],
+            ['.fq', '.fq.gz', '.fastq', '.fastq.gz']
+        ):
             input_file_path = parent_dataset.item_content_abspath(identifier)
             with temp_working_dir() as tmp:
                 output_file_path = os.path.join(
