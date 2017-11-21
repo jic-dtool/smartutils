@@ -15,23 +15,25 @@ def is_file_extension_in_list(filename, extension_list):
 
 
 def test_identifier_and_read_from_relpath():
-    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fastq.gz") == ("ERR188234_chrX", 1)
-    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fastq.gz") == ("ERR188234_chrX", 2)
-    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fq.gz") == ("ERR188234_chrX", 1)
-    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fq.gz") == ("ERR188234_chrX", 2)
+    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fastq.gz") == ("ERR188234_chrX", 1)  # NOQA
+    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fastq.gz") == ("ERR188234_chrX", 2)  # NOQA
+    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fq.gz") == ("ERR188234_chrX", 1)  # NOQA
+    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fq.gz") == ("ERR188234_chrX", 2)  # NOQA
 
-    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fastq") == ("ERR188234_chrX", 1)
-    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fastq") == ("ERR188234_chrX", 2)
-    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fq") == ("ERR188234_chrX", 1)
-    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fq") == ("ERR188234_chrX", 2)
+    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fastq") == ("ERR188234_chrX", 1)  # NOQA
+    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fastq") == ("ERR188234_chrX", 2)  # NOQA
+    assert identifier_and_read_from_relpath("ERR188234_chrX_1.fq") == ("ERR188234_chrX", 1)  # NOQA
+    assert identifier_and_read_from_relpath("ERR188234_chrX_2.fq") == ("ERR188234_chrX", 2)  # NOQA
 
-    assert identifier_and_read_from_relpath("tmp/ERR188234_chrX_1.fastq.gz") == ("ERR188234_chrX", 1)
+    assert identifier_and_read_from_relpath("tmp/ERR188234_chrX_1.fastq.gz") == ("ERR188234_chrX", 1)  # NOQA
+
 
 def identifier_and_read_from_relpath(relpath):
     fname = os.path.basename(relpath)  # ERR188234_chrX_2.fq.gz
     name = fname.split(".")[0]  # ERR188234_chrX_2
-    name_parts = name.split("_") # ERR188234, chrX, 2
+    name_parts = name.split("_")  # ERR188234, chrX, 2
     return "_".join(name_parts[:-1]), int(name_parts[-1])
+
 
 def create_read1_overlay(dataset):
 
