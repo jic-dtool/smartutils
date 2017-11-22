@@ -149,6 +149,26 @@ def create_read1_overlay(dataset):
     dataset.put_overlay('is_read1', read1_overlay)
 
 
+def create_pair_id_overlay(dataset):
+
+    illumina_metadata = dataset.get_overlay('illumina_metadata')
+
+    pair_id = {}
+
+    for read1_id, value in illumina_metadata.items():
+        if value:
+            read2_id = find_paired_read(dataset, read1_id)
+            pair_id[read1_id] = read2_id
+            pair_id[read2_id] = read1_id
+
+    for i in dataset.identifiers:
+        if i not in pair_id:
+            pair_id[i] = None
+
+    dataset.put_overlay('pair_id', pair_id)
+
+
+
 @click.command()
 @dataset_uri_argument
 def cli(dataset_uri):
@@ -157,6 +177,7 @@ def cli(dataset_uri):
 
     create_illumina_metadata_overlay(dataset)
     create_read1_overlay(dataset)
+    create_pair_id_overlay(dataset)
 
 if __name__ == '__main__':
     cli()
